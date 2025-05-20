@@ -1,8 +1,8 @@
-import os  # Add this import at the top of the file
+import os  
 from cryptography.fernet import Fernet
 from database import get_db, close_db
 
-# Load the encryption key from the environment variable or file
+# Load Encryption Key
 def load_encryption_key():
     key_path = "key.env"
     
@@ -10,42 +10,34 @@ def load_encryption_key():
         with open(key_path, "rb") as file:
             key = file.read()
         try:
-            # Ensure the key is valid (32 bytes base64 URL-safe)
-            Fernet(key)  # This will validate the key format
+            Fernet(key)  # Validate key format
             return key
         except ValueError:
-            # If the key is invalid, delete the old key and generate a new one
             print("Invalid key format, generating a new key...")
-            os.remove(key_path)  # Remove the invalid key file
-            key = Fernet.generate_key()  # Generate a new valid Fernet key
+            os.remove(key_path)  
+            key = Fernet.generate_key()  
             with open(key_path, "wb") as file:
                 file.write(key)
             return key
     else:
-        # If the key doesn't exist, generate and save a new one
         key = Fernet.generate_key()
         with open(key_path, "wb") as file:
             file.write(key)
         return key
 
-# Initialize the encryption system (Fernet)
 fernet_key = load_encryption_key()
-cipher = Fernet(fernet_key)  # This defines the cipher to be used for encryption/decryption
+cipher = Fernet(fernet_key)  
 
-# ✅ Save a password to the database
+# ✅ Save Password Function
 def save_password(user_id, website, username, password):
     db = get_db()
     cursor = db.cursor()
     
     try:
-        # Encrypt the password before saving it
         encrypted_password = cipher.encrypt(password.encode()).decode()
-        
-        # Insert the new password into the database
         cursor.execute("INSERT INTO passwords (user_id, website, username, password) VALUES (?, ?, ?, ?)", 
                        (user_id, website, username, encrypted_password))
         db.commit()
-
     except Exception as e:
         print(f"Error saving password: {e}")
         raise
@@ -53,7 +45,7 @@ def save_password(user_id, website, username, password):
         cursor.close()
         close_db(db)
 
-# ✅ Get all saved passwords for a specific user
+# ✅ Get Saved Passwords Function (with debugging)
 def get_saved_passwords(user_id):
     db = get_db()
     cursor = db.cursor()
@@ -62,10 +54,16 @@ def get_saved_passwords(user_id):
         cursor.execute("SELECT id, website, username, password FROM passwords WHERE user_id = ?", (user_id,))
         passwords = cursor.fetchall()
 
-        # Decrypt the passwords before displaying
         decrypted_passwords = []
         for password in passwords:
-            decrypted_password = cipher.decrypt(password[3].encode()).decode()  # Column index 3 holds the encrypted password
+            print("🔒 Encrypted Password in DB:", password[3])  # Debugging Step
+            
+            try:
+                decrypted_password = cipher.decrypt(password[3].encode()).decode()
+            except Exception as e:
+                print("❌ Decryption Failed for:", password[3])
+                raise e  # Show actual error
+            
             decrypted_passwords.append({
                 'id': password[0],
                 'website': password[1],
@@ -87,9 +85,7 @@ def update_password(password_id, new_password, user_id):
     cursor = db.cursor()
 
     try:
-        # Encrypt the new password
         encrypted_password = cipher.encrypt(new_password.encode()).decode()
-
         cursor.execute("UPDATE passwords SET password = ? WHERE id = ? AND user_id = ?", 
                        (encrypted_password, password_id, user_id))
         db.commit()

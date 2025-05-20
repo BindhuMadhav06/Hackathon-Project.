@@ -1,0 +1,20 @@
+{
+  "manifest_version": 3,
+  "name": "Password Autofill Extension",
+  "version": "1.0",
+  "description": "Auto-fill passwords from the Flask app",
+  "permissions": ["activeTab", "storage", "<all_urls>"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ],
+  "host_permissions": ["http://127.0.0.1:5000/*", "<all_urls>"],
+  "action": {
+    "default_popup": "popup.html"
+  }
+}

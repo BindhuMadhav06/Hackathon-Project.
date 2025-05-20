@@ -51,6 +51,11 @@
                 <td>{{ password.website }}</td>
                 <td>{{ password.username }}</td>
                 <td>
+                    <!-- Autofill Button -->
+                    <button class="btn btn-success" onclick="autofillPassword('{{ password.website }}', '{{ password.username }}', '{{ password.password }}')">
+                        Autofill
+                    </button>
+
                     <!-- View Button for Modal -->
                     <button class="btn btn-info" data-toggle="modal" data-target="#passwordModal{{ password.id }}">
                         View
@@ -93,9 +98,17 @@
 
     <a href="/logout" class="btn btn-danger">Logout</a>
 
-    <!-- JavaScript for Show/Hide Passwords -->
+    <!-- JavaScript for Autofill and Show/Hide Password -->
     <script>
-        // Show/hide new password in form
+        // ✅ Autofill feature
+        function autofillPassword(website, username, password) {
+            // Autofill the form fields
+            document.getElementById('website').value = website;
+            document.getElementById('username').value = username;
+            document.getElementById('password').value = password;
+        }
+
+        // ✅ Show/hide new password in form
         document.getElementById("toggleNewPassword").addEventListener("change", function() {
             var newPasswordInput = document.getElementById("password");
             newPasswordInput.type = this.checked ? "text" : "password";

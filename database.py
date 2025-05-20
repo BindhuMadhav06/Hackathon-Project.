@@ -1,22 +1,37 @@
 import sqlite3
-from flask import g
 
 DATABASE = 'passwords.db'
 
 # Function to get the database connection
 def get_db():
     """Connect to the database."""
-    if 'db' not in g:
-        g.db = sqlite3.connect(DATABASE)
-        g.db.row_factory = sqlite3.Row  # Allows column access by name
-    return g.db
+    conn = sqlite3.connect(DATABASE)
+    conn.row_factory = sqlite3.Row  # Allows column access by name
+    return conn
 
-# Function to close the database connection
-def close_db(error=None):
+# Function to close the database connection ✅
+def close_db(conn):
     """Close the database connection."""
-    db = g.pop('db', None)
-    if db is not None:
-        db.close()
+    if conn is not None:
+        conn.close()
+
+def get_password(website):
+    db = get_db()
+    cursor = db.cursor()
+    try:
+        cursor.execute("SELECT website, username, password FROM passwords WHERE website = ?", (website,))
+        password_entry = cursor.fetchone()
+        if password_entry:
+            return {
+                'website': password_entry[0],
+                'username': password_entry[1],
+                'password': password_entry[2]
+            }
+        return None
+    finally:
+        cursor.close()
+        close_db(db)
+
 
 # Function to initialize the database
 def init_db():
@@ -39,6 +54,13 @@ def init_db():
                         website TEXT NOT NULL,
                         username TEXT NOT NULL,
                         password TEXT NOT NULL,
-                        FOREIGN KEY(user_id) REFERENCES users(id)
+                        FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
                     )''')
+
     db.commit()
+    close_db(db)  # ✅ Properly close the database
+    print("✅ Database initialized successfully!")
+
+# Run initialization if this file is executed directly
+if __name__ == "__main__":
+    init_db()
