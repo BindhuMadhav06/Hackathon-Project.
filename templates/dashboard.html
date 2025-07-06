@@ -3,14 +3,14 @@
 {% block title %}Dashboard | Password Manager{% endblock %}
 
 {% block content %}
-    <h2>Your Stored Passwords</h2>
+    <h2></h2>
 
     <!-- Flash messages -->
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             <ul class="alert-messages">
                 {% for category, message in messages %}
-                    <li class="alert alert-{{ category }}">{{ message }}</li>
+                    <li class="alert alert-{{ category }} flash-message">{{ message }}</li>
                 {% endfor %}
             </ul>
         {% endif %}
@@ -18,7 +18,7 @@
 
     <!-- Form to Save Password -->
     <h3>Add New Password</h3>
-    <form action="{{ url_for('save_password_route') }}" method="POST">
+    <form action="{{ url_for('save_password_route') }}" method="POST" id="passwordForm">
         <div class="form-group">
             <label for="website">Website:</label>
             <input type="text" class="form-control" id="website" name="website" required>
@@ -37,7 +37,10 @@
 
     <!-- Display Saved Passwords -->
     <h3>Your Stored Passwords</h3>
-    <table class="table">
+    {% if passwords|length == 0 %}
+        <p id="noPasswordsMsg" style="display: block; color: #ffffff; font-weight: bold; font-size: 1.1rem;">No passwords are saved.</p>
+    {% else %}
+    <table class="table" id="passwordTable">
         <thead>
             <tr>
                 <th>Website</th>
@@ -47,15 +50,10 @@
         </thead>
         <tbody>
             {% for password in passwords %}
-            <tr>
+            <tr id="row-{{ password.id }}">
                 <td>{{ password.website }}</td>
                 <td>{{ password.username }}</td>
                 <td>
-                    <!-- Autofill Button -->
-                    <button class="btn btn-success" onclick="autofillPassword('{{ password.website }}', '{{ password.username }}', '{{ password.password }}')">
-                        Autofill
-                    </button>
-
                     <!-- View Button for Modal -->
                     <button class="btn btn-info" data-toggle="modal" data-target="#passwordModal{{ password.id }}">
                         View
@@ -64,10 +62,8 @@
                     <!-- Edit Button -->
                     <a href="{{ url_for('edit_password', password_id=password.id) }}" class="btn btn-warning">Edit</a>
 
-                    <!-- Delete Button -->
-                    <form action="{{ url_for('delete_password', password_id=password.id) }}" method="POST" style="display:inline;">
-                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this password?');">Delete</button>
-                    </form>
+                    <!-- Delete Button (AJAX) -->
+                    <button class="btn btn-danger" onclick="confirmDelete({{ password.id }})">Delete</button>
                 </td>
             </tr>
 
@@ -91,27 +87,114 @@
                     </div>
                 </div>
             </div>
-
             {% endfor %}
         </tbody>
     </table>
+    {% endif %}
 
     <a href="/logout" class="btn btn-danger">Logout</a>
 
-    <!-- JavaScript for Autofill and Show/Hide Password -->
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content border-primary rounded-lg shadow">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="confirmDeleteLabel">Confirm Deletion</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body text-center">
+                    <p class="lead font-weight-bold text-dark" style="font-size: 1.1rem;">
+                        <span style="color:#003366; font-size:1.2rem; font-weight:600;">Are you sure you want to permanently delete this password?</span>
+                    </p>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="deleteConfirmBtn">Delete Permanently</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
     <script>
-        // ✅ Autofill feature
-        function autofillPassword(website, username, password) {
-            // Autofill the form fields
-            document.getElementById('website').value = website;
-            document.getElementById('username').value = username;
-            document.getElementById('password').value = password;
+        let passwordToDeleteId = null;
+
+        function confirmDelete(id) {
+            passwordToDeleteId = id;
+            $('#confirmDeleteModal').modal('show');
         }
 
-        // ✅ Show/hide new password in form
-        document.getElementById("toggleNewPassword").addEventListener("change", function() {
-            var newPasswordInput = document.getElementById("password");
+        function showDeleteSuccess() {
+            const alertContainer = document.querySelector('.alert-messages') || document.createElement('ul');
+            alertContainer.className = 'alert-messages';
+            const msg = document.createElement('li');
+            msg.className = 'alert alert-success flash-message';
+            msg.style.color = '#28a745';
+            msg.style.fontWeight = 'bold';
+            msg.style.fontSize = '1.1rem';
+            msg.innerText = 'Password deleted successfully!';
+            alertContainer.appendChild(msg);
+            document.querySelector('h2').after(alertContainer);
+            setTimeout(() => msg.remove(), 4000);
+        }
+
+        function showNoPasswordsMessage() {
+            // Create and show the "No passwords are saved" message
+            const h3Element = document.querySelector('h3:nth-of-type(2)'); // "Your Stored Passwords" heading
+            
+            // Remove existing message if any
+            const existingMsg = document.getElementById('noPasswordsMsg');
+            if (existingMsg) existingMsg.remove();
+            
+            // Create new message
+            const noPasswordsMsg = document.createElement('p');
+            noPasswordsMsg.id = 'noPasswordsMsg';
+            noPasswordsMsg.style.display = 'block';
+            noPasswordsMsg.style.color = '#ffffff';
+            noPasswordsMsg.style.fontWeight = 'bold';
+            noPasswordsMsg.style.fontSize = '1.1rem';
+            noPasswordsMsg.innerText = 'No passwords are saved.';
+            
+            // Insert after the h3 element
+            h3Element.after(noPasswordsMsg);
+        }
+
+        document.getElementById("toggleNewPassword").addEventListener("change", function () {
+            const newPasswordInput = document.getElementById("password");
             newPasswordInput.type = this.checked ? "text" : "password";
         });
+
+        document.getElementById("deleteConfirmBtn").addEventListener("click", function () {
+            if (!passwordToDeleteId) return;
+
+            fetch(`/delete_password/${passwordToDeleteId}`, {
+                method: 'POST',
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            }).then(res => {
+                if (res.ok) {
+                    const row = document.getElementById(`row-${passwordToDeleteId}`);
+                    if (row) row.remove();
+
+                    $('#confirmDeleteModal').modal('hide');
+
+                    showDeleteSuccess();
+
+                    const rows = document.querySelectorAll("tbody tr");
+                    if (rows.length === 0) {
+                        const table = document.getElementById("passwordTable");
+                        if (table) table.remove();
+
+                        showNoPasswordsMessage();
+                    }
+                }
+            });
+        });
+
+        // Auto-hide flash messages after 4 seconds
+        setTimeout(() => {
+            document.querySelectorAll('.flash-message').forEach(el => el.remove());
+        }, 4000);
     </script>
 {% endblock %}

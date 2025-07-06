@@ -4,54 +4,192 @@
 
 {% block content %}
     <div class="form-container">
-        <h2 class="text-center">Sign Up</h2>
+        <div class="text-center mb-4">
+            <i class="fas fa-user-plus" style="font-size: 4rem; color: rgba(255, 255, 255, 0.8); margin-bottom: 20px;"></i>
+            <h2 style="font-weight: 600; margin: 0;">Create Account</h2>
+            <p style="color: rgba(255, 255, 255, 0.7); margin-top: 10px;">Join us to secure your passwords</p>
+        </div>
 
-        <!-- Flash messages (only sign-up messages) -->
+        <!-- Flash messages -->
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 <ul class="alert-messages">
                     {% for category, message in messages %}
-                        <li class="alert alert-{{ category }}">{{ message }}</li>
+                        <li class="alert alert-{{ category }} flash-message">
+                            {{ message }}
+                            <button type="button" class="close-btn" onclick="dismissMessage(this)">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </li>
                     {% endfor %}
                 </ul>
             {% endif %}
         {% endwith %}
 
-        <form method="POST">
+        <form method="POST" id="signupForm">
             <!-- Username -->
             <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" class="form-control" id="username" name="username" required>
+                <label for="username">
+                    <i class="fas fa-user"></i> Username
+                </label>
+                <input type="text" class="form-control" id="username" name="username" required 
+                       placeholder="Choose a username" minlength="3">
+                <small style="color: rgba(255, 255, 255, 0.6); font-size: 0.8rem;">
+                    At least 3 characters long
+                </small>
             </div>
 
             <!-- Email -->
             <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" class="form-control" id="email" name="email" required>
+                <label for="email">
+                    <i class="fas fa-envelope"></i> Email Address
+                </label>
+                <input type="email" class="form-control" id="email" name="email" required 
+                       placeholder="Enter your email address">
+                <small style="color: rgba(255, 255, 255, 0.6); font-size: 0.8rem;">
+                    We'll send you a verification code
+                </small>
             </div>
 
             <!-- Password -->
             <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" class="form-control" id="password" name="password" required>
-                <input type="checkbox" id="show-password" onclick="togglePassword()"> Show Password
+                <label for="password">
+                    <i class="fas fa-lock"></i> Password
+                </label>
+                <div style="position: relative;">
+                    <input type="password" class="form-control" id="password" name="password" required 
+                           placeholder="Create a strong password" style="padding-right: 50px;" minlength="6">
+                    <button type="button" class="password-toggle" onclick="togglePassword()" 
+                            style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); 
+                                   background: none; border: none; color: rgba(255, 255, 255, 0.7); 
+                                   cursor: pointer; font-size: 1.1rem;">
+                        <i class="fas fa-eye" id="toggleIcon"></i>
+                    </button>
+                </div>
+                <div class="mt-2">
+                    <label style="display: flex; align-items: center; font-size: 0.9rem; color: rgba(255, 255, 255, 0.7);">
+                        <input type="checkbox" id="show-password" onclick="togglePasswordCheckbox()" 
+                               style="margin-right: 8px; transform: scale(1.1);">
+                        Show Password
+                    </label>
+                </div>
+                <small style="color: rgba(255, 255, 255, 0.6); font-size: 0.8rem;">
+                    Minimum 6 characters
+                </small>
             </div>
 
-            <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
-            <div class="text-center mt-3">
-                <p>Already have an account? <a href="/login">Login here</a></p>
+            <!-- Password Strength Indicator -->
+            <div class="form-group">
+                <div class="password-strength">
+                    <div class="strength-bar">
+                        <div class="strength-fill" id="strengthFill"></div>
+                    </div>
+                    <small id="strengthText" style="color: rgba(255, 255, 255, 0.6); font-size: 0.8rem;">
+                        Password strength: <span id="strengthLevel">Weak</span>
+                    </small>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">
+                <i class="fas fa-user-plus"></i> Create Account
+            </button>
+
+            <div class="text-center mt-4">
+                <p style="margin: 0; color: rgba(255, 255, 255, 0.7);">
+                    Already have an account? 
+                    <a href="/login" style="color: white; font-weight: 500; text-decoration: underline;">
+                        Sign In
+                    </a>
+                </p>
             </div>
         </form>
     </div>
 
-    <script>
-        function togglePassword() {
-            var passwordInput = document.getElementById("password");
-            if (passwordInput.type === "password") {
-                passwordInput.type = "text";
-            } else {
-                passwordInput.type = "password";
+    <style>
+        .password-toggle:hover {
+            color: white !important;
+        }
+        
+        .password-strength {
+            margin-top: 10px;
+        }
+        
+        .strength-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 5px;
+        }
+        
+        .strength-fill {
+            height: 100%;
+            width: 0%;
+            transition: all 0.3s ease;
+            border-radius: 3px;
+        }
+        
+        .strength-weak {
+            background: linear-gradient(90deg, #ff6b6b, #ee5a52);
+            width: 25%;
+        }
+        
+        .strength-fair {
+            background: linear-gradient(90deg, #feca57, #ff9ff3);
+            width: 50%;
+        }
+        
+        .strength-good {
+            background: linear-gradient(90deg, #48dbfb, #0abde3);
+            width: 75%;
+        }
+        
+        .strength-strong {
+            background: linear-gradient(90deg, #1dd1a1, #10ac84);
+            width: 100%;
+        }
+        
+        .form-control:focus {
+            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+        }
+        
+        .form-container {
+            animation: fadeInUp 0.8s ease-out;
+        }
+        
+        .form-group {
+            animation: slideInLeft 0.6s ease-out;
+        }
+        
+        .form-group:nth-child(2) { animation-delay: 0.1s; }
+        .form-group:nth-child(3) { animation-delay: 0.2s; }
+        .form-group:nth-child(4) { animation-delay: 0.3s; }
+        .form-group:nth-child(5) { animation-delay: 0.4s; }
+        
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
             }
         }
-    </script>
-{% endblock %}
+    </style>
+
+    <script>
+        function togglePassword() {
+            const passwordInput = document.getElementById("password");
+            const toggleIcon = document.getElementById("toggleIcon");
+            const checkbox = document.getElementById("show-password");
+            
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                toggleIcon.className = "fas fa-eye-slash";
+                checkbox.checked = true;
+            } else {
+                passwordInput.type = "password";
+                toggleIcon.className = "fas fa-eye";

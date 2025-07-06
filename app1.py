@@ -13,7 +13,7 @@ from passwordmanager import save_password, get_saved_passwords, update_password,
 from database import get_db, close_db, init_db  
 from dotenv import load_dotenv
 from database import get_password 
-from flask_sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy 
 
 app = Flask(__name__)
 
@@ -278,17 +278,30 @@ def dashboard():
 @app.route('/save_password', methods=['POST'])
 @login_required
 def save_password_route():
-    website = request.form['website']
+    website = request.form['website'].strip().lower()
     username = request.form['username']
     password = request.form['password']
 
+    db = get_db()
+    cursor = db.cursor()
+
     try:
-        save_password(current_user.id, website, username, password)
-        flash("Password saved successfully!", "success")
+        # Check for existing website for this user
+        cursor.execute("SELECT * FROM passwords WHERE website = ? AND user_id = ?", (website, current_user.id))
+        existing = cursor.fetchone()
+        if existing:
+            flash("Password for this website already exists.", "warning")
+        else:
+            save_password(current_user.id, website, username, password)
+            flash("Password saved successfully!", "success")
     except Exception as e:
         flash(f"Error: {e}", "error")
+    finally:
+        cursor.close()
+        close_db(db)
 
     return redirect(url_for('dashboard'))
+
 
 # ✅ Edit Password Route
 @app.route('/edit_password/<int:password_id>', methods=['GET', 'POST'])
@@ -342,27 +355,6 @@ def resend_otp():
         return redirect(url_for('login'))
     return redirect(url_for('verify_otp'))
 
-@app.route('/autofill/<int:password_id>', methods=['POST'])
-@login_required
-def autofill(password_id):
-    db = get_db()
-    cursor = db.cursor()
-    
-    cursor.execute("SELECT website, username, password FROM passwords WHERE id = ? AND user_id = ?", 
-                   (password_id, current_user.id))
-    password_entry = cursor.fetchone()
-    cursor.close()
-    close_db(db)
-
-    if password_entry:
-        decrypted_password = cipher.decrypt(password_entry[2].encode()).decode()
-        return jsonify({
-            'website': password_entry[0],
-            'username': password_entry[1],
-            'password': decrypted_password
-        })
-    else:
-        return jsonify({'error': 'Password not found'}), 404
 
 @app.route('/get-password')
 def get_password():
