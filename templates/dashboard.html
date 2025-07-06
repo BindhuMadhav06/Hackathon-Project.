@@ -4,570 +4,214 @@
 
 {% block content %}
     <style>
-        /* Dark background theme */
-        body {
-            background-color: #1a1a1a;
-            color: #ffffff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        /* Modal container - full screen modal effect */
-        .modal-dashboard {
-            background-color: #2d2d2d;
-            min-height: 100vh;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-            margin: 0;
-            position: relative;
-        }
-
-        /* Container styling */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        /* Flash messages */
-        .alert-messages {
-            list-style: none;
-            padding: 0;
-            margin: 15px 0;
-        }
-
-        .flash-message {
-            padding: 15px 20px;
-            margin-bottom: 15px;
-            border-radius: 8px;
-            font-weight: 500;
-            text-align: center;
-            border-left: 4px solid;
-        }
-
-        .alert-success {
-            background-color: rgba(40, 167, 69, 0.2);
-            color: #28a745;
-            border-left-color: #28a745;
-        }
-
-        .alert-error {
-            background-color: rgba(220, 53, 69, 0.2);
-            color: #dc3545;
-            border-left-color: #dc3545;
-        }
-
-        .alert-info {
-            background-color: rgba(23, 162, 184, 0.2);
-            color: #17a2b8;
-            border-left-color: #17a2b8;
-        }
-
-        /* Form styling */
-        .form-section {
-            background-color: #3a3a3a;
-            padding: 25px;
-            border-radius: 12px;
-            margin-bottom: 30px;
-            border: 1px solid #4a4a4a;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
+        /* Enhanced Button Styles */
+        .btn-modern {
+            padding: 8px 16px;
+            font-size: 13px;
             font-weight: 600;
-            color: #ffffff;
-            font-size: 14px;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #4a4a4a;
             border-radius: 8px;
-            font-size: 16px;
-            background-color: #2d2d2d;
-            color: #ffffff;
-            box-sizing: border-box;
-            transition: border-color 0.3s ease;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: #007bff;
-            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
-        }
-
-        .form-control::placeholder {
-            color: #888;
-        }
-
-        .password-toggle {
-            margin-top: 12px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .password-toggle input[type="checkbox"] {
-            width: auto;
-            margin: 0;
-            transform: scale(1.2);
-        }
-
-        .password-toggle label {
-            margin: 0;
-            font-size: 14px;
-            color: #cccccc;
-            cursor: pointer;
-        }
-
-        /* Button styles */
-        .btn {
-            padding: 10px 16px;
-            font-size: 14px;
-            font-weight: 500;
-            border-radius: 6px;
             border: none;
             cursor: pointer;
             text-decoration: none;
             display: inline-block;
             text-align: center;
             transition: all 0.3s ease;
-            margin: 3px;
-            min-width: 80px;
-        }
-
-        .btn-primary {
-            background-color: #007bff;
-            color: white;
-            padding: 12px 24px;
-            font-size: 15px;
-        }
-
-        .btn-primary:hover {
-            background-color: #0056b3;
-            transform: translateY(-2px);
-        }
-
-        .btn-info {
-            background-color: #17a2b8;
-            color: white;
-        }
-
-        .btn-info:hover {
-            background-color: #138496;
-        }
-
-        .btn-warning {
-            background-color: #ffc107;
-            color: #212529;
-        }
-
-        .btn-warning:hover {
-            background-color: #e0a800;
-        }
-
-        .btn-danger {
-            background-color: #dc3545;
-            color: white;
-        }
-
-        .btn-danger:hover {
-            background-color: #c82333;
-        }
-
-        .btn-secondary {
-            background-color: #6c757d;
-            color: white;
-        }
-
-        .btn-secondary:hover {
-            background-color: #5a6268;
-        }
-
-        .btn-outline-secondary {
-            background-color: transparent;
-            color: #6c757d;
-            border: 2px solid #6c757d;
-        }
-
-        .btn-outline-secondary:hover {
-            background-color: #6c757d;
-            color: white;
-        }
-
-        /* Headings - WHITE TEXT */
-        h2, h3 {
-            color: #ffffff;
-            margin: 25px 0 20px 0;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-        }
-
-        h2 {
-            font-size: 28px;
-            font-weight: 700;
-            text-align: center;
-            border-bottom: 3px solid #007bff;
-            padding-bottom: 10px;
-        }
-
-        h3 {
-            font-size: 20px;
-            font-weight: 600;
-            color: #ffffff;
-            margin-top: 30px;
-        }
-
-        /* No passwords message */
-        #noPasswordsMsg {
-            color: #cccccc;
-            font-weight: 500;
-            font-size: 16px;
-            text-align: center;
-            padding: 25px;
-            background-color: #3a3a3a;
-            border-radius: 8px;
-            margin: 15px 0;
-            border: 1px solid #4a4a4a;
-        }
-
-        /* Table styling */
-        .table-section {
-            background-color: #3a3a3a;
-            padding: 25px;
-            border-radius: 12px;
-            margin-bottom: 30px;
-            border: 1px solid #4a4a4a;
-        }
-
-        .table-container {
-            overflow-x: auto;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-        }
-
-        .table {
-            width: 100%;
-            background-color: #2d2d2d;
-            border-collapse: collapse;
-            margin: 0;
-            font-size: 14px;
-        }
-
-        .table th,
-        .table td {
-            padding: 15px 12px;
-            text-align: left;
-            border-bottom: 1px solid #4a4a4a;
-            color: #ffffff;
-        }
-
-        .table th {
-            background-color: #1a1a1a;
-            font-weight: 600;
-            color: #ffffff;
-            font-size: 14px;
+            margin: 2px;
+            min-width: 70px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
-        .table tbody tr:hover {
-            background-color: #4a4a4a;
-            transition: background-color 0.3s ease;
+        .btn-modern:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
         }
 
-        /* Action buttons in table */
-        .table .btn {
-            padding: 8px 12px;
-            font-size: 12px;
-            margin: 2px;
+        .btn-modern:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
-        /* Modal improvements */
-        .modal-content {
-            border-radius: 12px;
-            border: none;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-            background-color: #2d2d2d;
-            color: #ffffff;
+        .btn-view {
+            background: linear-gradient(135deg, #17a2b8, #138496);
+            color: white;
+            border: 2px solid transparent;
         }
 
-        .modal-header {
-            background-color: #1a1a1a;
-            border-bottom: 2px solid #4a4a4a;
-            padding: 20px;
+        .btn-view:hover {
+            background: linear-gradient(135deg, #138496, #117a8b);
+            color: white;
+            text-decoration: none;
         }
 
-        .modal-title {
-            color: #ffffff;
-            font-size: 18px;
-            font-weight: 600;
+        .btn-edit {
+            background: linear-gradient(135deg, #ffc107, #e0a800);
+            color: #212529;
+            border: 2px solid transparent;
         }
 
-        .modal-body {
-            padding: 25px;
-            color: #ffffff;
-            background-color: #2d2d2d;
+        .btn-edit:hover {
+            background: linear-gradient(135deg, #e0a800, #d39e00);
+            color: #212529;
+            text-decoration: none;
         }
 
-        .modal-body p {
-            margin-bottom: 15px;
-            font-size: 15px;
+        .btn-delete {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: white;
+            border: 2px solid transparent;
         }
 
-        .modal-body strong {
-            color: #ffffff;
+        .btn-delete:hover {
+            background: linear-gradient(135deg, #c82333, #bd2130);
+            color: white;
+            text-decoration: none;
         }
 
-        .modal-footer {
-            border-top: 2px solid #4a4a4a;
-            padding: 20px;
-            background-color: #1a1a1a;
+        /* Icon styles */
+        .btn-icon {
+            margin-right: 4px;
+            font-size: 14px;
         }
 
-        /* Close button styling */
-        .close {
-            color: #ffffff;
-            opacity: 0.8;
-            font-size: 24px;
+        /* Action buttons container */
+        .action-buttons {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            justify-content: flex-start;
         }
 
-        .close:hover {
-            color: #ffffff;
-            opacity: 1;
-        }
-
-        /* Confirmation modal specific styling */
-        .modal-header.bg-primary {
-            background-color: #007bff !important;
-            color: white !important;
-        }
-
-        .modal-header.bg-primary .modal-title {
-            color: white !important;
-        }
-
-        .text-dark {
-            color: #ffffff !important;
-        }
-
-        .lead {
-            font-size: 16px;
-            line-height: 1.5;
-            color: #ffffff;
-        }
-
-        /* Logout button */
-        .logout-section {
-            text-align: center;
-            margin-top: 40px;
-            padding: 20px;
-        }
-
-        .logout-btn {
-            padding: 12px 30px;
-            font-size: 16px;
-            font-weight: 600;
-        }
-
-        /* Password visibility in modal */
-        .password-display {
-            font-family: 'Courier New', monospace;
-            background-color: #1a1a1a;
-            padding: 10px;
-            border-radius: 6px;
-            border: 1px solid #4a4a4a;
-            display: inline-block;
-            min-width: 150px;
-            color: #ffffff;
-            word-break: break-all;
-        }
-
-        /* Mobile responsive adjustments */
+        /* Responsive adjustments */
         @media (max-width: 768px) {
-            .modal-dashboard {
-                padding: 10px;
+            .action-buttons {
+                flex-direction: column;
+                gap: 2px;
             }
-
-            .container {
-                padding: 10px;
-            }
-
-            .form-section,
-            .table-section {
-                padding: 15px;
-            }
-
-            .form-control {
-                font-size: 16px; /* Prevents zoom on iOS */
-            }
-
-            .table th,
-            .table td {
-                padding: 10px 8px;
-                font-size: 12px;
-            }
-
-            .table .btn {
-                padding: 6px 10px;
-                font-size: 11px;
-                min-width: 60px;
-            }
-
-            h2 {
-                font-size: 24px;
-            }
-
-            h3 {
-                font-size: 18px;
-            }
-
-            .modal-dialog {
-                margin: 10px;
-            }
-
-            /* Stack action buttons vertically on very small screens */
-            @media (max-width: 480px) {
-                .table .btn {
-                    display: block;
-                    width: 100%;
-                    margin: 2px 0;
-                }
+            
+            .btn-modern {
+                width: 100%;
+                margin: 1px 0;
             }
         }
     </style>
 
-    <div class="modal-dashboard">
-        <div class="container">
-            <h2>🔐 Password Manager Dashboard</h2>
+    <h2></h2>
 
-            <!-- Flash messages -->
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    <ul class="alert-messages">
-                        {% for category, message in messages %}
-                            <li class="alert alert-{{ category }} flash-message">{{ message }}</li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
-            {% endwith %}
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul class="alert-messages">
+                {% for category, message in messages %}
+                    <li class="alert alert-{{ category }} flash-message">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
 
-            <!-- Form to Save Password -->
-            <div class="form-section">
-                <h3>➕ Add New Password</h3>
-                <form action="{{ url_for('save_password_route') }}" method="POST" id="passwordForm">
-                    <div class="form-group">
-                        <label for="website">🌐 Website:</label>
-                        <input type="text" class="form-control" id="website" name="website" placeholder="Enter website name" required>
+    <!-- Form to Save Password -->
+    <h3>Add New Password</h3>
+    <form action="{{ url_for('save_password_route') }}" method="POST" id="passwordForm">
+        <div class="form-group">
+            <label for="website">Website:</label>
+            <input type="text" class="form-control" id="website" name="website" required>
+        </div>
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" class="form-control" id="username" name="username" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" class="form-control" id="password" name="password" required>
+            <input type="checkbox" id="toggleNewPassword"> Show Password
+        </div>
+        <button type="submit" class="btn btn-primary">Save Password</button>
+    </form>
+
+    <!-- Display Saved Passwords -->
+    <h3>Your Stored Passwords</h3>
+    {% if passwords|length == 0 %}
+        <p id="noPasswordsMsg" style="display: block; color: #ffffff; font-weight: bold; font-size: 1.1rem;">No passwords are saved.</p>
+    {% else %}
+    <table class="table" id="passwordTable">
+        <thead>
+            <tr>
+                <th>Website</th>
+                <th>Username</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for password in passwords %}
+            <tr id="row-{{ password.id }}">
+                <td>{{ password.website }}</td>
+                <td>{{ password.username }}</td>
+                <td>
+                    <div class="action-buttons">
+                        <!-- View Button for Modal -->
+                        <button class="btn-modern btn-view" data-toggle="modal" data-target="#passwordModal{{ password.id }}">
+                            <span class="btn-icon"></span>View
+                        </button>
+
+                        <!-- Edit Button -->
+                        <a href="{{ url_for('edit_password', password_id=password.id) }}" class="btn-modern btn-edit">
+                            <span class="btn-icon"></span>Edit
+                        </a>
+
+                        <!-- Delete Button (AJAX) -->
+                        <button class="btn-modern btn-delete" onclick="confirmDelete({{ password.id }})">
+                            <span class="btn-icon"></span>Delete
+                        </button>
                     </div>
-                    <div class="form-group">
-                        <label for="username">👤 Username:</label>
-                        <input type="text" class="form-control" id="username" name="username" placeholder="Enter username" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="password">🔑 Password:</label>
-                        <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required>
-                        <div class="password-toggle">
-                            <input type="checkbox" id="toggleNewPassword">
-                            <label for="toggleNewPassword">Show Password</label>
+                </td>
+            </tr>
+
+            <!-- Modal for Viewing Password -->
+            <div class="modal fade" id="passwordModal{{ password.id }}" tabindex="-1" role="dialog" aria-labelledby="passwordModalLabel{{ password.id }}" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Password for {{ password.website }}</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p><strong>Username:</strong> {{ password.username }}</p>
+                            <p><strong>Password:</strong> <span id="passwordText{{ password.id }}">{{ password.password }}</span></p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary">💾 Save Password</button>
-                </form>
+                </div>
             </div>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
 
-            <!-- Display Saved Passwords -->
-            <div class="table-section">
-                <h3>📋 Your Stored Passwords</h3>
-                {% if passwords|length == 0 %}
-                    <p id="noPasswordsMsg">No passwords are saved yet. Add your first password above!</p>
-                {% else %}
-                    <div class="table-container">
-                        <table class="table" id="passwordTable">
-                            <thead>
-                                <tr>
-                                    <th>Website</th>
-                                    <th>Username</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for password in passwords %}
-                                <tr id="row-{{ password.id }}">
-                                    <td>{{ password.website }}</td>
-                                    <td>{{ password.username }}</td>
-                                    <td>
-                                        <!-- View Button for Modal -->
-                                        <button class="btn btn-info" data-toggle="modal" data-target="#passwordModal{{ password.id }}">
-                                            👁️ View
-                                        </button>
-
-                                        <!-- Edit Button -->
-                                        <a href="{{ url_for('edit_password', password_id=password.id) }}" class="btn btn-warning">✏️ Edit</a>
-
-                                        <!-- Delete Button (AJAX) -->
-                                        <button class="btn btn-danger" onclick="confirmDelete({{ password.id }})">🗑️ Delete</button>
-                                    </td>
-                                </tr>
-
-                                <!-- Modal for Viewing Password -->
-                                <div class="modal fade" id="passwordModal{{ password.id }}" tabindex="-1" role="dialog" aria-labelledby="passwordModalLabel{{ password.id }}" aria-hidden="true">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title">🔐 Password for {{ password.website }}</h5>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <p><strong>👤 Username:</strong> {{ password.username }}</p>
-                                                <p><strong>🔑 Password:</strong> <span class="password-display" id="passwordText{{ password.id }}">{{ password.password }}</span></p>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                {% endif %}
-            </div>
-
-            <!-- Logout Section -->
-            <div class="logout-section">
-                <a href="/logout" class="btn btn-danger logout-btn">🚪 Logout</a>
-            </div>
-        </div>
-    </div>
+    <a href="/logout" class="btn btn-danger">Logout</a>
 
     <!-- Delete Confirmation Modal -->
     <div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header bg-primary">
-                    <h5 class="modal-title" id="confirmDeleteLabel">⚠️ Confirm Deletion</h5>
+            <div class="modal-content border-primary rounded-lg shadow">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="confirmDeleteLabel">Confirm Deletion</h5>
                     <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body text-center">
-                    <p class="lead">
-                        Are you sure you want to permanently delete this password?
+                    <p class="lead font-weight-bold text-dark" style="font-size: 1.1rem;">
+                        <span style="color:#003366; font-size:1.2rem; font-weight:600;">Are you sure you want to permanently delete this password?</span>
                     </p>
-                    <p style="color: #ffc107;">⚠️ This action cannot be undone!</p>
                 </div>
                 <div class="modal-footer justify-content-center">
                     <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-danger" id="deleteConfirmBtn">🗑️ Delete Permanently</button>
+                    <button type="button" class="btn btn-primary" id="deleteConfirmBtn">Delete Permanently</button>
                 </div>
             </div>
         </div>
@@ -587,32 +231,34 @@
             alertContainer.className = 'alert-messages';
             const msg = document.createElement('li');
             msg.className = 'alert alert-success flash-message';
-            msg.innerText = '✅ Password deleted successfully!';
+            msg.style.color = '#28a745';
+            msg.style.fontWeight = 'bold';
+            msg.style.fontSize = '1.1rem';
+            msg.innerText = 'Password deleted successfully!';
             alertContainer.appendChild(msg);
-            
-            // Insert after h2 if container is new
-            if (!document.querySelector('.alert-messages')) {
-                document.querySelector('h2').after(alertContainer);
-            }
-            
+            document.querySelector('h2').after(alertContainer);
             setTimeout(() => msg.remove(), 4000);
         }
 
         function showNoPasswordsMessage() {
             // Create and show the "No passwords are saved" message
-            const tableSection = document.querySelector('.table-section');
+            const h3Element = document.querySelector('h3:nth-of-type(2)'); // "Your Stored Passwords" heading
             
-            // Remove existing table if any
-            const existingTable = document.querySelector('.table-container');
-            if (existingTable) existingTable.remove();
+            // Remove existing message if any
+            const existingMsg = document.getElementById('noPasswordsMsg');
+            if (existingMsg) existingMsg.remove();
             
             // Create new message
             const noPasswordsMsg = document.createElement('p');
             noPasswordsMsg.id = 'noPasswordsMsg';
-            noPasswordsMsg.innerText = 'No passwords are saved yet. Add your first password above!';
+            noPasswordsMsg.style.display = 'block';
+            noPasswordsMsg.style.color = '#ffffff';
+            noPasswordsMsg.style.fontWeight = 'bold';
+            noPasswordsMsg.style.fontSize = '1.1rem';
+            noPasswordsMsg.innerText = 'No passwords are saved.';
             
-            // Insert in table section
-            tableSection.appendChild(noPasswordsMsg);
+            // Insert after the h3 element
+            h3Element.after(noPasswordsMsg);
         }
 
         document.getElementById("toggleNewPassword").addEventListener("change", function () {
@@ -637,19 +283,18 @@
 
                     const rows = document.querySelectorAll("tbody tr");
                     if (rows.length === 0) {
+                        const table = document.getElementById("passwordTable");
+                        if (table) table.remove();
+
                         showNoPasswordsMessage();
                     }
                 }
             });
         });
 
-        // Auto-hide flash messages after 5 seconds
+        // Auto-hide flash messages after 4 seconds
         setTimeout(() => {
-            document.querySelectorAll('.flash-message').forEach(el => {
-                el.style.opacity = '0';
-                el.style.transition = 'opacity 0.5s ease';
-                setTimeout(() => el.remove(), 500);
-            });
-        }, 5000);
+            document.querySelectorAll('.flash-message').forEach(el => el.remove());
+        }, 4000);
     </script>
 {% endblock %}
