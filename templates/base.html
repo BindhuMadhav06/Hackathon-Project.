@@ -16,7 +16,7 @@
             --warning-gradient: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
             --danger-gradient: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
             --glass-bg: rgba(255, 255, 255, 0.1);
-            --glass-border: rgba(255, 255, 255, 0.2);A
+            --glass-border: rgba(255, 255, 255, 0.2);
             --shadow-light: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
             --shadow-heavy: 0 15px 35px rgba(0, 0, 0, 0.1);
         }
@@ -107,20 +107,21 @@
 
         .header-text {
             text-align: center;
-            margin: 40px 0;
+            margin: 2rem 0;
             position: relative;
+            padding: 0 1rem;
         }
 
         .header-text h1 {
             font-family: 'Poppins', sans-serif;
-            font-size: 3.5rem;
+            font-size: clamp(2rem, 5vw, 3.5rem);
             font-weight: 700;
             background: linear-gradient(45deg, #fff, #f0f8ff, #e6f3ff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             text-shadow: 0 4px 20px rgba(255, 255, 255, 0.3);
-            letter-spacing: 3px;
+            letter-spacing: clamp(1px, 0.5vw, 3px);
             margin-bottom: 10px;
             animation: fadeInDown 1s ease-out, textGlow 3s ease-in-out infinite alternate;
             position: relative;
@@ -130,6 +131,7 @@
             color: #667eea;
             filter: drop-shadow(0 0 10px rgba(102, 126, 234, 0.5));
             animation: iconPulse 2s ease-in-out infinite;
+            margin-right: 0.5rem;
         }
 
         @keyframes iconPulse {
@@ -148,7 +150,7 @@
             bottom: -10px;
             left: 50%;
             transform: translateX(-50%);
-            width: 100px;
+            width: clamp(60px, 20vw, 100px);
             height: 3px;
             background: linear-gradient(90deg, transparent, #fff, #667eea, #fff, transparent);
             border-radius: 2px;
@@ -163,17 +165,18 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 1rem;
         }
 
         .form-container {
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
             backdrop-filter: blur(25px);
             border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 25px;
-            padding: 40px;
-            margin: 0 auto;
+            border-radius: clamp(15px, 4vw, 25px);
+            padding: clamp(20px, 5vw, 40px);
+            margin: 1rem auto;
             max-width: 450px;
+            width: 100%;
             box-shadow: 
                 0 8px 32px 0 rgba(31, 38, 135, 0.37),
                 0 0 0 1px rgba(255, 255, 255, 0.1) inset;
@@ -207,7 +210,7 @@
             right: 0;
             bottom: 0;
             background: linear-gradient(45deg, rgba(102, 126, 234, 0.05), rgba(240, 147, 251, 0.05));
-            border-radius: 25px;
+            border-radius: clamp(15px, 4vw, 25px);
             pointer-events: none;
             animation: colorShift 8s ease-in-out infinite;
         }
@@ -218,7 +221,7 @@
         }
 
         .form-group {
-            margin-bottom: 25px;
+            margin-bottom: clamp(15px, 4vw, 25px);
             position: relative;
             z-index: 1;
         }
@@ -228,18 +231,18 @@
             margin-bottom: 8px;
             font-weight: 500;
             color: rgba(255, 255, 255, 0.9);
-            font-size: 0.95rem;
+            font-size: clamp(0.85rem, 2vw, 0.95rem);
             transition: all 0.3s ease;
         }
 
         .form-control {
             width: 100%;
-            padding: 15px 20px;
+            padding: clamp(10px, 3vw, 15px) clamp(15px, 4vw, 20px);
             border: 2px solid rgba(255, 255, 255, 0.2);
-            border-radius: 15px;
+            border-radius: clamp(10px, 3vw, 15px);
             background: rgba(255, 255, 255, 0.1);
             color: white;
-            font-size: 1rem;
+            font-size: clamp(0.9rem, 2.5vw, 1rem);
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             backdrop-filter: blur(10px);
             position: relative;
@@ -260,11 +263,11 @@
         }
 
         .btn {
-            padding: 15px 30px;
+            padding: clamp(12px, 3vw, 15px) clamp(20px, 5vw, 30px);
             border: none;
-            border-radius: 15px;
+            border-radius: clamp(10px, 3vw, 15px);
             font-weight: 600;
-            font-size: 1rem;
+            font-size: clamp(0.9rem, 2.5vw, 1rem);
             cursor: pointer;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
@@ -272,6 +275,13 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             z-index: 1;
+            text-align: center;
+            display: inline-block;
+            width: 100%;
+            min-height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .btn::before {
@@ -315,8 +325,8 @@
         }
 
         .btn-primary:hover {
-            transform: translateY(-4px) scale(1.05);
-            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.4);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
         }
 
         .btn-secondary {
@@ -326,8 +336,8 @@
         }
 
         .btn-secondary:hover {
-            transform: translateY(-4px) scale(1.05);
-            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.4);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
         }
 
         .btn-danger {
@@ -337,8 +347,8 @@
         }
 
         .btn-danger:hover {
-            transform: translateY(-4px) scale(1.05);
-            box-shadow: 0 20px 40px rgba(245, 87, 108, 0.4);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(245, 87, 108, 0.4);
         }
 
         .btn-warning {
@@ -348,8 +358,8 @@
         }
 
         .btn-warning:hover {
-            transform: translateY(-4px) scale(1.05);
-            box-shadow: 0 20px 40px rgba(240, 147, 251, 0.4);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(240, 147, 251, 0.4);
         }
 
         .btn-info {
@@ -359,37 +369,38 @@
         }
 
         .btn-info:hover {
-            transform: translateY(-4px) scale(1.05);
-            box-shadow: 0 20px 40px rgba(17, 153, 142, 0.4);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(17, 153, 142, 0.4);
         }
 
         .btn-block {
             width: 100%;
-            margin: 20px 0;
+            margin: clamp(15px, 4vw, 20px) 0;
         }
 
         .alert-messages {
             list-style: none;
             padding: 0;
-            margin-bottom: 30px;
+            margin-bottom: clamp(20px, 5vw, 30px);
             z-index: 1;
             position: relative;
         }
 
         .alert {
-            padding: 15px 20px;
-            border-radius: 15px;
+            padding: clamp(12px, 3vw, 15px) clamp(15px, 4vw, 20px);
+            border-radius: clamp(10px, 3vw, 15px);
             margin-bottom: 15px;
             border: none;
             backdrop-filter: blur(15px);
             animation: slideInRight 0.5s ease-out, alertPulse 2s ease-in-out infinite;
             position: relative;
             overflow: hidden;
+            font-size: clamp(0.85rem, 2vw, 0.95rem);
         }
 
         @keyframes alertPulse {
             0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.02); }
+            50% { transform: scale(1.01); }
         }
 
         .alert::before {
@@ -438,6 +449,7 @@
             font-weight: 500;
             transition: all 0.3s ease;
             position: relative;
+            font-size: clamp(0.85rem, 2vw, 0.95rem);
         }
 
         .text-center a::before {
@@ -487,7 +499,7 @@
                 width: 0;
             }
             to {
-                width: 100px;
+                width: clamp(60px, 20vw, 100px);
             }
         }
 
@@ -511,22 +523,6 @@
             }
         }
 
-        @media (max-width: 768px) {
-            .header-text h1 {
-                font-size: 2.5rem;
-                letter-spacing: 2px;
-            }
-            
-            .form-container {
-                padding: 30px 25px;
-                margin: 20px;
-            }
-            
-            .container {
-                padding: 0 15px;
-            }
-        }
-
         /* Flash message animations */
         .flash-message {
             position: relative;
@@ -545,7 +541,7 @@
             transform: translateY(-50%);
             background: none;
             border: none;
-            font-size: 20px;
+            font-size: clamp(16px, 4vw, 20px);
             cursor: pointer;
             color: rgba(255, 255, 255, 0.7);
             padding: 5px;
@@ -589,6 +585,125 @@
             0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
             50% { opacity: 1; transform: scale(1) rotate(180deg); }
         }
+
+        /* Responsive breakpoints */
+        @media (max-width: 576px) {
+            .header-text {
+                margin: 1rem 0;
+            }
+            
+            .form-container {
+                margin: 0.5rem;
+                padding: 20px;
+                border-radius: 15px;
+            }
+            
+            .container {
+                padding: 0 0.5rem;
+            }
+            
+            .btn:hover {
+                transform: translateY(-1px) scale(1.01);
+            }
+            
+            .form-control:focus {
+                transform: translateY(-1px) scale(1.01);
+            }
+        }
+
+        @media (min-width: 577px) and (max-width: 768px) {
+            .header-text {
+                margin: 1.5rem 0;
+            }
+            
+            .form-container {
+                margin: 1rem;
+                padding: 30px;
+                border-radius: 20px;
+            }
+        }
+
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .header-text {
+                margin: 2rem 0;
+            }
+            
+            .form-container {
+                padding: 35px;
+                border-radius: 22px;
+            }
+        }
+
+        @media (min-width: 1025px) {
+            .header-text {
+                margin: 2.5rem 0;
+            }
+            
+            .form-container {
+                padding: 40px;
+                border-radius: 25px;
+            }
+        }
+
+        /* Touch-friendly improvements for mobile */
+        @media (pointer: coarse) {
+            .btn {
+                min-height: 48px;
+                padding: 15px 25px;
+            }
+            
+            .form-control {
+                min-height: 48px;
+                padding: 15px 20px;
+            }
+            
+            .close-btn {
+                width: 44px;
+                height: 44px;
+            }
+        }
+
+        /* High-resolution displays */
+        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+            .sparkle {
+                width: 3px;
+                height: 3px;
+            }
+        }
+
+        /* Landscape orientation on mobile */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .header-text {
+                margin: 1rem 0;
+            }
+            
+            .header-text h1 {
+                font-size: 2rem;
+            }
+            
+            .form-container {
+                margin: 0.5rem auto;
+                padding: 20px;
+            }
+        }
+
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --glass-bg: rgba(255, 255, 255, 0.08);
+                --glass-border: rgba(255, 255, 255, 0.15);
+            }
+        }
+
+        /* Reduced motion for accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -611,10 +726,11 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     
     <script>
-        // Create magical sparkles
+        // Create magical sparkles with device-appropriate count
         function createSparkles() {
             const sparkleContainer = document.getElementById('sparkles');
-            const sparkleCount = 15;
+            const isMobile = window.innerWidth <= 768;
+            const sparkleCount = isMobile ? 8 : 15; // Fewer sparkles on mobile for performance
             
             for (let i = 0; i < sparkleCount; i++) {
                 const sparkle = document.createElement('div');
@@ -627,7 +743,19 @@
             }
         }
         
-        // Initialize sparkles when page loads
+        // Responsive sparkles management
+        function manageSparkles() {
+            const sparkleContainer = document.getElementById('sparkles');
+            const isMobile = window.innerWidth <= 768;
+            
+            // Clear existing sparkles
+            sparkleContainer.innerHTML = '';
+            
+            // Create appropriate number of sparkles
+            createSparkles();
+        }
+        
+        // Initialize when page loads
         document.addEventListener('DOMContentLoaded', function() {
             createSparkles();
             
@@ -635,23 +763,36 @@
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 anchor.addEventListener('click', function (e) {
                     e.preventDefault();
-                    document.querySelector(this.getAttribute('href')).scrollIntoView({
-                        behavior: 'smooth'
-                    });
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    }
                 });
             });
             
-            // Add hover effects to form controls
-            document.querySelectorAll('.form-control').forEach(input => {
-                input.addEventListener('focus', function() {
-                    this.parentElement.style.transform = 'translateY(-2px)';
+            // Add enhanced hover effects for desktop
+            if (window.innerWidth > 768) {
+                document.querySelectorAll('.form-control').forEach(input => {
+                    input.addEventListener('focus', function() {
+                        this.parentElement.style.transform = 'translateY(-2px)';
+                    });
+                    
+                    input.addEventListener('blur', function() {
+                        this.parentElement.style.transform = 'translateY(0)';
+                    });
                 });
-                
-                input.addEventListener('blur', function() {
-                    this.parentElement.style.transform = 'translateY(0)';
+            }
+            
+            // Touch-friendly interactions for mobile
+            if ('ontouchstart' in window) {
+                document.querySelectorAll('.btn').forEach(button => {
+                    button.addEventListener('touchstart', function() {
+                        this.style.transform = 'scale(0.98)';
+                    });
+                    
+                    button.addEventListener('touchend', function() {
+                        this.style.transform = '';
+                    });
                 });
-            });
-        });
-    </script>
-</body>
-</html>
