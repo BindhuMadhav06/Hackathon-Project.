@@ -193,3 +193,102 @@
             } else {
                 passwordInput.type = "password";
                 toggleIcon.className = "fas fa-eye";
+                checkbox.checked = false;
+            }
+        }
+
+        function togglePasswordCheckbox() {
+            const passwordInput = document.getElementById("password");
+            const toggleIcon = document.getElementById("toggleIcon");
+            const checkbox = document.getElementById("show-password");
+            
+            if (checkbox.checked) {
+                passwordInput.type = "text";
+                toggleIcon.className = "fas fa-eye-slash";
+            } else {
+                passwordInput.type = "password";
+                toggleIcon.className = "fas fa-eye";
+            }
+        }
+
+        function checkPasswordStrength(password) {
+            const strengthFill = document.getElementById("strengthFill");
+            const strengthLevel = document.getElementById("strengthLevel");
+            
+            let strength = 0;
+            let level = "Weak";
+            
+            // Check password length
+            if (password.length >= 6) strength += 1;
+            if (password.length >= 10) strength += 1;
+            
+            // Check for uppercase letters
+            if (/[A-Z]/.test(password)) strength += 1;
+            
+            // Check for lowercase letters
+            if (/[a-z]/.test(password)) strength += 1;
+            
+            // Check for numbers
+            if (/[0-9]/.test(password)) strength += 1;
+            
+            // Check for special characters
+            if (/[^A-Za-z0-9]/.test(password)) strength += 1;
+            
+            // Determine strength level
+            if (strength <= 2) {
+                level = "Weak";
+                strengthFill.className = "strength-fill strength-weak";
+            } else if (strength <= 4) {
+                level = "Fair";
+                strengthFill.className = "strength-fill strength-fair";
+            } else if (strength <= 5) {
+                level = "Good";
+                strengthFill.className = "strength-fill strength-good";
+            } else {
+                level = "Strong";
+                strengthFill.className = "strength-fill strength-strong";
+            }
+            
+            strengthLevel.textContent = level;
+        }
+
+        // Add event listener for password input
+        document.getElementById("password").addEventListener("input", function() {
+            checkPasswordStrength(this.value);
+        });
+
+        function dismissMessage(button) {
+            const message = button.parentElement;
+            message.style.opacity = "0";
+            message.style.transform = "translateX(100%)";
+            setTimeout(() => {
+                message.remove();
+            }, 300);
+        }
+
+        // Form validation
+        document.getElementById("signupForm").addEventListener("submit", function(e) {
+            const username = document.getElementById("username").value;
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            
+            if (username.length < 3) {
+                e.preventDefault();
+                alert("Username must be at least 3 characters long");
+                return;
+            }
+            
+            if (password.length < 6) {
+                e.preventDefault();
+                alert("Password must be at least 6 characters long");
+                return;
+            }
+            
+            if (!email.includes("@")) {
+                e.preventDefault();
+                alert("Please enter a valid email address");
+                return;
+            }
+        });
+    </script>
+{% endblock %}
